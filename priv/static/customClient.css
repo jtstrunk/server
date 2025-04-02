@@ -1,0 +1,192 @@
+.btn-primary{
+    color: #fff;
+    background-color: #337ab7;
+    border-color: #2e6da4;
+    display: inline-block;
+    padding: 6px 12px;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.42857143;
+    text-align: center;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    width: 150px;
+    cursor: pointer;
+}
+
+.draft{
+    display: flex;
+    flex-direction: row;
+}
+.draft p{ 
+    width: 125px;
+}
+
+.users {
+    width: 60px;
+}
+.users p{
+    height: 80px;
+}
+
+.playerHeader{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-right: 8px;
+}
+
+.firstName{
+    font-size: 16px;
+}
+.lastName{
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.WR {
+    background-color: #3C3D37;
+    width: 120px;
+    border-radius: 5px;
+    margin: 2.5px;
+}
+.WR span{
+    font-size: 12px;
+}
+
+.RB {
+    background-color: #697565;
+    width: 120px;
+    border-radius: 5px;
+    margin: 2.5px;
+}
+.RB span{
+    font-size: 12px;
+}
+
+.QB {
+    background-color: #2E4053;
+    width: 120px;
+    border-radius: 5px;
+    margin: 2.5px;
+}
+.QB span{
+    font-size: 12px;
+}
+
+.TE {
+    background-color: #AA9C87;
+    width: 120px;
+    border-radius: 5px;
+    margin: 2.5px;
+}
+.TE span{
+    font-size: 12px;
+}
+
+
+.availablePlayers{
+    height: 350px;
+    width: 45%;
+    overflow-y: auto;
+    margin-top: 8px;
+}
+.draftablePlayer {
+    display: flex;
+    flex-direction: row;
+    margin: 3px 0px;
+}
+.draftablePlayer div {
+    height: 40px;
+    display: flex;
+    flex-direction: column;
+    
+}
+.draftablePlayer span {
+    font-size: 11px;
+}
+
+.draftPlayer{
+    font-size: 24px;
+}
+.draftPlayer:hover{
+    cursor: pointer;
+}
+.posName {
+    display: flex !important;
+    flex-direction: row !important;
+}
+
+.roster {
+    display: flex;
+    flex-direction: row;
+    height: 350px;
+    width: 65%;
+    margin-top: 8px;
+}
+.roster .sectionHeader{
+    margin-top: 5px;
+}
+.roster .draftedHeader {
+    height: 100%;
+    width: 350px;
+}
+.draftedHeader .draftedHeaderTop{
+    height: 100%;
+}
+
+.QBList {
+    height: 25%;
+    margin-bottom: 19px;
+}
+
+.RBList {
+    height: 44%;
+}
+
+.WRList {
+    height: 44%;
+}
+
+.TEList {
+    height: 25%;
+}
+
+.position-box {
+    width: 70px;
+    display: flex;
+    margin-bottom: 10px;
+    padding-left: 25px;
+}
+
+.quaterback span,
+.runningback span,
+.widereceiver span,
+.tightend span {
+    display: inline-block;
+    width: 45px;
+    text-align: center;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.quaterback span { 
+    background-color: #2E4053; 
+}
+.runningback span { 
+    background-color: #697565; 
+}
+.widereceiver span { 
+    background-color: #3C3D37; 
+}
+.tightend span { 
+    background-color: #AA9C87; 
+}
+
+.drafted{
+    margin-top: 8px;
+    margin-bottom: 23px;
+    margin-left: 10px;
+    font-size: 20px;
+}
