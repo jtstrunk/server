@@ -124,7 +124,7 @@ pub fn main() {
   let assert Ok(_) =
     mist_handler
     |> mist.new
-    |> mist.port(8000)
+    |> mist.port(8100)
     |> mist.start_http
   process.sleep_forever()
 }

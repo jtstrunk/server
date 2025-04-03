@@ -145,7 +145,12 @@ pub fn html_response(html: element.Element(msg)) {
 }
 
 pub fn render_as_page(component name: String) {
-  as_document(server_component.component([server_component.route("/" <> name)]))
+  as_document(
+    html.div([], [
+      server_component.component([server_component.route("/" <> name)]),
+      html.text("Text"),
+    ]),
+  )
   |> html_response
 }
 
