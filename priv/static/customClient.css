@@ -190,3 +190,56 @@
     margin-left: 10px;
     font-size: 20px;
 }
+
+
+
+
+/* team view */
+.teams {
+    width: 1200px;
+    justify-content: space-around;
+    flex-direction: column;
+}
+
+.teams .playerSection{
+    width: 100%;
+}
+
+.playerSection .test {
+    width: 50%;
+}
+
+.playerSection .player{
+    width: 100%;
+}
+
+.playerName {
+
+    margin-left: 30px;
+}
+
+.teamHeading {
+    width: 250px;
+    justify-content: space-between;
+    margin-left: 250px;
+}
+
+.teams .QBList {
+    height: 100px;
+    margin-bottom: 0px;
+}
+
+.teams .RBList {
+    height: 150px;
+    margin-bottom: 0px;
+}
+
+.teams .WRList {
+    height: 150px;
+    margin-bottom: 0px;
+}
+
+.teams .TEList {
+    height: 100px;
+    margin-bottom: 0px;
+}

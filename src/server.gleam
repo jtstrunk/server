@@ -70,6 +70,24 @@ pub fn draftableplayer_endec() {
   // decode.success(rowjson)
 }
 
+pub fn userteam_endectest() {
+  use leagueid <- decode.field(0, decode.int)
+  use usernumber <- decode.field(1, decode.int)
+  use firstname <- decode.field(2, decode.string)
+  use lastname <- decode.field(3, decode.string)
+  use team <- decode.field(4, decode.string)
+  use position <- decode.field(5, decode.string)
+
+  decode.success(clientcode.UserTeam(
+    leagueid,
+    usernumber,
+    firstname,
+    lastname,
+    team,
+    position,
+  ))
+}
+
 pub fn userteam_endec() {
   use leagueid <- decode.field(0, decode.int)
   use usernumber <- decode.field(1, decode.int)
@@ -112,11 +130,26 @@ pub fn main() {
   let assert Ok(conn) = sqlight.open("playoffpush.db")
   let sql = "SELECT * FROM DraftablePlayer ORDER BY adp DESC;"
 
-  let assert Ok(rows) =
+  let assert Ok(draftableplayerrows) =
     sqlight.query(sql, on: conn, with: [], expecting: draftableplayer_endec())
 
-  let assert Ok(draft_actor) = lustre.start_actor(clientcode.main(), rows)
+  // let leagueid = 25_226
+  // let sql = "SELECT * FROM UserTeam WHERE leagueid = ?;"
+
+  // let assert Ok(teamrows) =
+  //   sqlight.query(
+  //     sql,
+  //     on: conn,
+  //     with: [sqlight.int(leagueid)],
+  //     expecting: userteam_endectest(),
+  //   )
+
+  let assert Ok(draft_actor) =
+    lustre.start_actor(clientcode.main(), draftableplayerrows)
   let context = Context(draft_actor:)
+
+  // let assert Ok(teams_actor) = lustre.start_actor(clientcode.main(), teamrows)
+  // let context = Context(teams_actor:)
 
   // Start the HTTP server
   let mist_handler = fn(req) { handler(req, context, secret_key_base) }
@@ -125,6 +158,7 @@ pub fn main() {
     mist_handler
     |> mist.new
     |> mist.port(8100)
+    |> mist.bind("0.0.0.0")
     |> mist.start_http
   process.sleep_forever()
 }
@@ -138,6 +172,8 @@ fn handler(req, context: Context, secret_key_base) {
       server_component.get_connection(req, context.draft_actor)
 
     ["draft"] -> server_component.render_as_page("draft-server-component")
+
+    ["teams"] -> server_component.render_as_page("teams-server-component")
 
     _ ->
       wisp_mist.handler(handle_wisp_request(_, context), secret_key_base)(req)
@@ -183,7 +219,7 @@ fn handle_wisp_request(req, _context) {
       let leagueid = 25_226
 
       let assert Ok(conn) = sqlight.open("playoffpush.db")
-      let sql = "SELECT * FROM UserTeam WHERE leagueid = ? AND usernumber = ?;"
+      let sql = "SELECT * FROM UserTeam WHERE leagueid = ?;"
 
       let assert Ok(rows) =
         sqlight.query(

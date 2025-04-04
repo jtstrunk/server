@@ -17,7 +17,7 @@ pub fn init(players) {
   #(
     Model(
       0,
-      Draft,
+      TeamView,
       users: ["Nate", "Josh", "Sam", "Ethan"],
       useronedrafted: [],
       usertwodrafted: [],
@@ -72,6 +72,17 @@ pub type DraftablePlayer {
     position: String,
     team: String,
     adp: Float,
+  )
+}
+
+pub type UserTeam {
+  UserTeam(
+    leagueid: Int,
+    usernumber: Int,
+    firstname: String,
+    lastname: String,
+    team: String,
+    position: String,
   )
 }
 
@@ -249,7 +260,7 @@ pub fn view(model: Model) -> element.Element(Msg) {
     case model.view_mode {
       TeamView ->
         html.div([attribute.class("flex justify-center items-center h-full")], [
-          team_view(),
+          team_view(model, model.users),
         ])
       Draft ->
         html.div([attribute.class("flex justify-center items-center h-full")], [
@@ -268,6 +279,7 @@ pub fn view(model: Model) -> element.Element(Msg) {
   ])
 }
 
+// rn
 fn draft_view(
   model: Model,
   users: List(String),
@@ -354,21 +366,11 @@ fn draft_view(
           ]),
         ]),
         html.div([attribute.class("positionHeader")], [
-          html.div([attribute.class("position-box widereceiver")], [
-            html.span([], [html.text("WR")]),
-          ]),
-          html.div([attribute.class("position-box widereceiver")], [
-            html.span([], [html.text("WR")]),
-          ]),
-          html.div([attribute.class("position-box widereceiver")], [
-            html.span([], [html.text("WR")]),
-          ]),
-          html.div([attribute.class("position-box tightend")], [
-            html.span([], [html.text("TE")]),
-          ]),
-          html.div([attribute.class("position-box tightend")], [
-            html.span([], [html.text("TE")]),
-          ]),
+          create_position_box("WR", "widereceiver"),
+          create_position_box("WR", "widereceiver"),
+          create_position_box("WR", "widereceiver"),
+          create_position_box("TE", "tightend"),
+          create_position_box("TE", "tightend"),
         ]),
         html.div([attribute.class("draftedHeader")], [
           html.div([attribute.class("WRList")], [
@@ -479,8 +481,191 @@ fn drafted_users_view(players: List(Player)) -> element.Element(Msg) {
   ])
 }
 
-fn team_view() -> element.Element(Msg) {
-  html.div([attribute.class("text-white p-4")], [
-    html.p([], [element.text("show teams")]),
+fn team_view(model: Model, users: List(String)) -> element.Element(Msg) {
+  html.div([attribute.class("text-white p-4 ")], [
+    html.div(
+      [attribute.class("flex flex-row teams")],
+      list.map(users, fn(user) {
+        html.p([attribute.class("")], [html.text(user)])
+      }),
+    ),
+    html.div([attribute.class("flex flex-col teams")], [
+      html.div([attribute.class("flex flex-row playerSection")], [
+        html.div([attribute.class("test")], [
+          html.div([attribute.class("flex flex-row")], [
+            html.div([attribute.class("flex flex-row playerName")], [
+              html.p([attribute.class("")], [html.text("Nate - ")]),
+              html.p([attribute.class("")], [html.text("0")]),
+            ]),
+            html.div([attribute.class("flex flex-row teamHeading")], [
+              html.p([attribute.class("")], [html.text("WC")]),
+              html.p([attribute.class("")], [html.text("DIV")]),
+              html.p([attribute.class("")], [html.text("CHAMP")]),
+              html.p([attribute.class("")], [html.text("SOUPY")]),
+              html.p([attribute.class("")], [html.text("TOTAL")]),
+            ]),
+          ]),
+          html.div([attribute.class("flex flex-row player")], [
+            html.div([], [
+              create_position_box("QB", "quaterback"),
+              create_position_box("QB", "quaterback"),
+              create_position_box("RB", "runningback"),
+              create_position_box("RB", "runningback"),
+              create_position_box("RB", "runningback"),
+              create_position_box("WR", "widereceiver"),
+              create_position_box("WR", "widereceiver"),
+              create_position_box("WR", "widereceiver"),
+              create_position_box("TE", "tightend"),
+              create_position_box("TE", "tightend"),
+            ]),
+            html.div([], [
+              html.div([attribute.class("QBList")], [
+                render_position_list(model, 1, "QB"),
+              ]),
+              html.div([attribute.class("WRList")], [
+                render_position_list(model, 1, "RB"),
+              ]),
+              html.div([attribute.class("WRList")], [
+                render_position_list(model, 1, "WR"),
+              ]),
+              html.div([attribute.class("TEList")], [
+                render_position_list(model, 1, "TE"),
+              ]),
+            ]),
+          ]),
+        ]),
+        html.div([attribute.class("test")], [
+          html.div([attribute.class("flex flex-row")], [
+            html.div([attribute.class("flex flex-row playerName")], [
+              html.p([attribute.class("")], [html.text("Josh - ")]),
+              html.p([attribute.class("")], [html.text("0")]),
+            ]),
+            html.div([attribute.class("flex flex-row teamHeading")], [
+              html.p([attribute.class("")], [html.text("WC")]),
+              html.p([attribute.class("")], [html.text("DIV")]),
+              html.p([attribute.class("")], [html.text("CHAMP")]),
+              html.p([attribute.class("")], [html.text("SOUPY")]),
+              html.p([attribute.class("")], [html.text("TOTAL")]),
+            ]),
+          ]),
+          html.div([attribute.class("flex flex-row player")], [
+            html.div([], [
+              create_position_box("QB", "quaterback"),
+              create_position_box("QB", "quaterback"),
+              create_position_box("RB", "runningback"),
+              create_position_box("RB", "runningback"),
+              create_position_box("RB", "runningback"),
+              create_position_box("WR", "widereceiver"),
+              create_position_box("WR", "widereceiver"),
+              create_position_box("WR", "widereceiver"),
+              create_position_box("TE", "tightend"),
+              create_position_box("TE", "tightend"),
+            ]),
+            html.div([], [
+              html.div([attribute.class("QBList")], [
+                render_position_list(model, 2, "QB"),
+              ]),
+              html.div([attribute.class("WRList")], [
+                render_position_list(model, 2, "RB"),
+              ]),
+              html.div([attribute.class("WRList")], [
+                render_position_list(model, 2, "WR"),
+              ]),
+              html.div([attribute.class("TEList")], [
+                render_position_list(model, 2, "TE"),
+              ]),
+            ]),
+          ]),
+        ]),
+      ]),
+      html.div([attribute.class("flex flex-row playerSection")], [
+        html.div([attribute.class("test")], [
+          html.div([attribute.class("flex flex-row")], [
+            html.div([attribute.class("flex flex-row playerName")], [
+              html.p([attribute.class("")], [html.text("Sam - ")]),
+              html.p([attribute.class("")], [html.text("0")]),
+            ]),
+            html.div([attribute.class("flex flex-row teamHeading")], [
+              html.p([attribute.class("")], [html.text("WC")]),
+              html.p([attribute.class("")], [html.text("DIV")]),
+              html.p([attribute.class("")], [html.text("CHAMP")]),
+              html.p([attribute.class("")], [html.text("SOUPY")]),
+              html.p([attribute.class("")], [html.text("TOTAL")]),
+            ]),
+          ]),
+          html.div([attribute.class("flex flex-row player")], [
+            html.div([], [
+              create_position_box("QB", "quaterback"),
+              create_position_box("QB", "quaterback"),
+              create_position_box("RB", "runningback"),
+              create_position_box("RB", "runningback"),
+              create_position_box("RB", "runningback"),
+              create_position_box("WR", "widereceiver"),
+              create_position_box("WR", "widereceiver"),
+              create_position_box("WR", "widereceiver"),
+              create_position_box("TE", "tightend"),
+              create_position_box("TE", "tightend"),
+            ]),
+            html.div([], [
+              html.div([attribute.class("QBList")], [
+                render_position_list(model, 3, "QB"),
+              ]),
+              html.div([attribute.class("WRList")], [
+                render_position_list(model, 3, "RB"),
+              ]),
+              html.div([attribute.class("WRList")], [
+                render_position_list(model, 3, "WR"),
+              ]),
+              html.div([attribute.class("TEList")], [
+                render_position_list(model, 3, "TE"),
+              ]),
+            ]),
+          ]),
+        ]),
+        html.div([attribute.class("test")], [
+          html.div([attribute.class("flex flex-row")], [
+            html.div([attribute.class("flex flex-row playerName")], [
+              html.p([attribute.class("")], [html.text("Ethan - ")]),
+              html.p([attribute.class("")], [html.text("0")]),
+            ]),
+            html.div([attribute.class("flex flex-row teamHeading")], [
+              html.p([attribute.class("")], [html.text("WC")]),
+              html.p([attribute.class("")], [html.text("DIV")]),
+              html.p([attribute.class("")], [html.text("CHAMP")]),
+              html.p([attribute.class("")], [html.text("SOUPY")]),
+              html.p([attribute.class("")], [html.text("TOTAL")]),
+            ]),
+          ]),
+          html.div([attribute.class("flex flex-row player")], [
+            html.div([], [
+              create_position_box("QB", "quaterback"),
+              create_position_box("QB", "quaterback"),
+              create_position_box("RB", "runningback"),
+              create_position_box("RB", "runningback"),
+              create_position_box("RB", "runningback"),
+              create_position_box("WR", "widereceiver"),
+              create_position_box("WR", "widereceiver"),
+              create_position_box("WR", "widereceiver"),
+              create_position_box("TE", "tightend"),
+              create_position_box("TE", "tightend"),
+            ]),
+            html.div([], [
+              html.div([attribute.class("QBList")], [
+                render_position_list(model, 4, "QB"),
+              ]),
+              html.div([attribute.class("WRList")], [
+                render_position_list(model, 4, "RB"),
+              ]),
+              html.div([attribute.class("WRList")], [
+                render_position_list(model, 4, "WR"),
+              ]),
+              html.div([attribute.class("TEList")], [
+                render_position_list(model, 4, "TE"),
+              ]),
+            ]),
+          ]),
+        ]),
+      ]),
+    ]),
   ])
 }
