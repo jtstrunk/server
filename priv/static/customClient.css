@@ -189,6 +189,7 @@
     margin-bottom: 23px;
     margin-left: 10px;
     font-size: 20px;
+    width: 220px;
 }
 
 
@@ -219,9 +220,9 @@
 }
 
 .teamHeading {
-    width: 250px;
+    width: 275px;
     justify-content: space-between;
-    margin-left: 250px;
+    margin-left: 225px;
 }
 
 .teams .QBList {
@@ -242,4 +243,16 @@
 .teams .TEList {
     height: 100px;
     margin-bottom: 0px;
+}
+
+.pointsSection {
+    width: 275px;
+    justify-content: space-between;
+}
+
+.points {
+    margin-top: 8px;
+    margin-bottom: 23px;
+    margin-left: 10px;
+    font-size: 18px;
 }

@@ -2,6 +2,7 @@ import clientcode
 import dot_env
 import dot_env/env
 import gleam/dict
+import gleam/dynamic
 import gleam/dynamic/decode
 import gleam/erlang/process
 import gleam/http
@@ -19,6 +20,7 @@ import lustre/server_component as lustre_server_component
 import mist
 import server_component
 import sqlight
+import teamview
 import wisp
 import wisp/wisp_mist
 
@@ -77,14 +79,22 @@ pub fn userteam_endectest() {
   use lastname <- decode.field(3, decode.string)
   use team <- decode.field(4, decode.string)
   use position <- decode.field(5, decode.string)
+  use wildcardpoints <- decode.field(6, number_as_float())
+  use divisionalpoints <- decode.field(7, number_as_float())
+  use championshippoints <- decode.field(8, number_as_float())
+  use superbowlpoints <- decode.field(9, number_as_float())
 
-  decode.success(clientcode.UserTeam(
+  decode.success(teamview.UserTeam(
     leagueid,
     usernumber,
     firstname,
     lastname,
     team,
     position,
+    wildcardpoints,
+    divisionalpoints,
+    championshippoints,
+    superbowlpoints,
   ))
 }
 
@@ -110,10 +120,29 @@ pub fn userteam_endec() {
   decode.success(rowjson)
 }
 
+pub fn number_as_float() {
+  decode.one_of(decode.float, [decode.int |> decode.map(int.to_float)])
+}
+
+// pub fn number_asint(dy) {
+//   case dynamic.int(dy) {
+//     Ok(val) -> Ok(val)
+//     Error() -> {
+//       case dynamic.float(dy) {
+//         Error(err) -> Error(err)
+//         Ok(val) -> Ok(float.truncate(val))
+//       }
+//     }
+//   }
+// }
+
 pub type Context {
   Context(
     draft_actor: process.Subject(
       lustre.Action(clientcode.Msg, lustre.ServerComponent),
+    ),
+    team_actor: process.Subject(
+      lustre.Action(teamview.Msg, lustre.ServerComponent),
     ),
   )
 }
@@ -133,23 +162,24 @@ pub fn main() {
   let assert Ok(draftableplayerrows) =
     sqlight.query(sql, on: conn, with: [], expecting: draftableplayer_endec())
 
-  // let leagueid = 25_226
-  // let sql = "SELECT * FROM UserTeam WHERE leagueid = ?;"
+  let leagueid = 25_226
+  let sql = "SELECT * FROM UserTeam WHERE leagueid = ?;"
 
-  // let assert Ok(teamrows) =
-  //   sqlight.query(
-  //     sql,
-  //     on: conn,
-  //     with: [sqlight.int(leagueid)],
-  //     expecting: userteam_endectest(),
-  //   )
+  let assert Ok(teamrows) =
+    sqlight.query(
+      sql,
+      on: conn,
+      with: [sqlight.int(leagueid)],
+      expecting: userteam_endectest(),
+    )
+
+  echo "query results"
+  echo teamrows
 
   let assert Ok(draft_actor) =
     lustre.start_actor(clientcode.main(), draftableplayerrows)
-  let context = Context(draft_actor:)
-
-  // let assert Ok(teams_actor) = lustre.start_actor(clientcode.main(), teamrows)
-  // let context = Context(teams_actor:)
+  let assert Ok(team_actor) = lustre.start_actor(teamview.main(), teamrows)
+  let context = Context(draft_actor:, team_actor:)
 
   // Start the HTTP server
   let mist_handler = fn(req) { handler(req, context, secret_key_base) }
@@ -171,9 +201,12 @@ fn handler(req, context: Context, secret_key_base) {
     ["draft-server-component"] ->
       server_component.get_connection(req, context.draft_actor)
 
+    ["team-server-component"] ->
+      server_component.get_connection(req, context.team_actor)
+
     ["draft"] -> server_component.render_as_page("draft-server-component")
 
-    ["teams"] -> server_component.render_as_page("teams-server-component")
+    ["teams"] -> server_component.render_as_page("team-server-component")
 
     _ ->
       wisp_mist.handler(handle_wisp_request(_, context), secret_key_base)(req)

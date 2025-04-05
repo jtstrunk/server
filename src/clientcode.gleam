@@ -8,6 +8,7 @@ import lustre/effect
 import lustre/element
 import lustre/element/html
 import lustre/event
+import sqlight
 
 pub fn main() {
   lustre.component(init, update, view, dict.new())
@@ -17,7 +18,7 @@ pub fn init(players) {
   #(
     Model(
       0,
-      TeamView,
+      Draft,
       users: ["Nate", "Josh", "Sam", "Ethan"],
       useronedrafted: [],
       usertwodrafted: [],
@@ -174,6 +175,15 @@ pub fn update(model: Model, msg: Msg) {
 
                   let updated_players =
                     list.filter(model.players, fn(p) { p.id != player.id })
+
+                  // draft sql
+
+                  let assert Ok(conn) = sqlight.open("playoffpush.db")
+
+                  let sql =
+                    "INSERT INTO UserTeam (leagueid, usernumber, playerfirstname, playerlastname, playerteam, playerposition, playerdraftnumber)
+                      VALUES (?, ?, ?, ?, ?, ?, ?)"
+
                   let new_model = case model.playernumber {
                     1 ->
                       Model(
